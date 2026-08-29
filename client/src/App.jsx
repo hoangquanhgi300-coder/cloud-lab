@@ -10,7 +10,7 @@ function App() {
   // Lấy danh sách sinh viên từ Backend
   const fetchStudents = async () => {
     try {
-      const response = await fetch('https://obscure-giggle-p7gvpgxv76wgf65wj-5000.app.github.dev/api/students');
+      const response = await fetch('http://localhost:5000/api/students');
       const data = await response.json();
       setStudents(data);
     } catch (error) {
@@ -29,7 +29,7 @@ function App() {
     const newStudent = { studentId: mssv, name: name, email: email };
     
     try {
-      await fetch('https://obscure-giggle-p7gvpgxv76wgf65wj-5000.app.github.dev/api/students', {
+      await fetch('http://localhost:5000/api/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newStudent)
@@ -50,7 +50,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) {
       try {
-        await fetch(`https://obscure-giggle-p7gvpgxv76wgf65wj-5000.app.github.dev/api/students/${id}`, {
+        await fetch(`http://localhost:5000/api/students/${id}`, {
           method: 'DELETE',
         });
         alert("Xóa thành công!");
@@ -66,7 +66,7 @@ function App() {
     const newName = window.prompt("Nhập tên mới cho sinh viên:", currentName);
     if (newName && newName.trim() !== "") {
       try {
-        await fetch(`https://obscure-giggle-p7gvpgxv76wgf65wj-5000.app.github.dev/api/students/${id}`, {
+        await fetch(`http://localhost:5000/api/students/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
