@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  backend:
+    # build: ./mern-demo/server
+    image: hoangquan21102005/mern-backend:1.0
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb+srv://hoangquan:hoangquan2005@cluster0.vnprtks.mongodb.net/cloud_lab?appName=Cluster0
+
+  frontend:
+    # build: ./client
+    image: hoangquan21102005/mern-frontend:2.0
+    ports:
+      - "3000:3000"
+    command: npx serve -s dist -l 3000
