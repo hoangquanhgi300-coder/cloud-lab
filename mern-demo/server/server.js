@@ -1,3 +1,4 @@
+global.crypto = require('crypto');
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,8 +7,24 @@ const Student = require('./models/Student');
 
 const app = express();
 
-// Middleware cực kỳ quan trọng để Frontend kết nối được với Backend
-app.use(cors());
+// Câu 58: Cấu hình CORS linh hoạt cho Production
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Hoặc truyền origin cụ thể
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
