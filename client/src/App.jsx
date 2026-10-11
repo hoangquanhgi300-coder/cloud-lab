@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
+// URL Backend Production chính thức trên Render
+const API_BASE_URL = 'https://mern-backend-236294.onrender.com/api/students';
+
 function App() {
   const [mssv, setMssv] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [students, setStudents] = useState([]);
 
-  // Lấy danh sách sinh viên (Sử dụng đường dẫn tương đối /api/students)
+  // Lấy danh sách sinh viên
   const fetchStudents = async () => {
     try {
-      const response = await fetch('/api/students');
+      const response = await fetch(API_BASE_URL);
       const data = await response.json();
       setStudents(data);
     } catch (error) {
@@ -28,7 +31,7 @@ function App() {
     const newStudent = { studentId: mssv, name: name, email: email };
     
     try {
-      await fetch('/api/students', {
+      await fetch(API_BASE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newStudent)
@@ -48,7 +51,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) {
       try {
-        await fetch(`/api/students/${id}`, {
+        await fetch(`${API_BASE_URL}/${id}`, {
           method: 'DELETE',
         });
         alert("Xóa thành công!");
@@ -72,7 +75,7 @@ function App() {
 
     if (newStudentId.trim() !== "" && newName.trim() !== "" && newEmail.trim() !== "") {
       try {
-        await fetch(`/api/students/${student._id}`, {
+        await fetch(`${API_BASE_URL}/${student._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studentId: newStudentId, name: newName, email: newEmail }),
@@ -89,7 +92,10 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>QUẢN LÝ SINH VIÊN (Phiên bản 2.0 - Production Cloud PaaS)</h1>
+      <h1 style={{ fontSize: '24px', textAlign: 'center', marginBottom: '20px' }}>
+  QUẢN LÝ SINH VIÊN 
+  (Phiên bản 2.0 - Production Cloud PaaS)
+</h1>
 
       <form onSubmit={handleSubmit} style={{ marginBottom: '30px', display: 'flex', gap: '10px' }}>
         <input 
