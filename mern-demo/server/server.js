@@ -81,7 +81,15 @@ app.delete('/api/students/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
+// Health Check Endpoint cho Cloud PaaS Monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'UP',
+    timestamp: new Date(),
+    uptime: process.uptime()
+  });
+});
 app.listen(port, () => {
     console.log(`Server dang chay tren port ${port}`);
 });
+console.log("==> Auto Deploy Webhook CI/CD Activated!");

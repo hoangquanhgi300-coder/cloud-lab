@@ -7,10 +7,10 @@ function App() {
   const [email, setEmail] = useState('');
   const [students, setStudents] = useState([]);
 
-  // Lấy danh sách sinh viên từ Backend trên Render
+  // Lấy danh sách sinh viên (Sử dụng đường dẫn tương đối /api/students)
   const fetchStudents = async () => {
     try {
-      const response = await fetch('https://mern-backend-zxmv.onrender.com/api/students');
+      const response = await fetch('/api/students');
       const data = await response.json();
       setStudents(data);
     } catch (error) {
@@ -28,7 +28,7 @@ function App() {
     const newStudent = { studentId: mssv, name: name, email: email };
     
     try {
-      await fetch('https://mern-backend-zxmv.onrender.com/api/students', {
+      await fetch('/api/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newStudent)
@@ -48,7 +48,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) {
       try {
-        await fetch(`https://mern-backend-zxmv.onrender.com/api/students/${id}`, {
+        await fetch(`/api/students/${id}`, {
           method: 'DELETE',
         });
         alert("Xóa thành công!");
@@ -59,7 +59,7 @@ function App() {
     }
   };
 
-  // Hàm xử lý Sửa sinh viên (Cho phép sửa cả MSSV, Tên và Email)
+  // Hàm xử lý Sửa sinh viên
   const handleEdit = async (student) => {
     const newStudentId = window.prompt("Nhập MSSV mới:", student.studentId);
     if (newStudentId === null) return;
@@ -72,7 +72,7 @@ function App() {
 
     if (newStudentId.trim() !== "" && newName.trim() !== "" && newEmail.trim() !== "") {
       try {
-        await fetch(`https://mern-backend-zxmv.onrender.com/api/students/${student._id}`, {
+        await fetch(`/api/students/${student._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studentId: newStudentId, name: newName, email: newEmail }),
@@ -89,7 +89,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h2>QUẢN LÝ SINH VIÊN (REACT FRONTEND)</h2>
+      <h1>QUẢN LÝ SINH VIÊN (Phiên bản 2.0 - Production Cloud PaaS)</h1>
 
       <form onSubmit={handleSubmit} style={{ marginBottom: '30px', display: 'flex', gap: '10px' }}>
         <input 
