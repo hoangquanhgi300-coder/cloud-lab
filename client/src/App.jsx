@@ -7,10 +7,10 @@ function App() {
   const [email, setEmail] = useState('');
   const [students, setStudents] = useState([]);
 
-  // Lấy danh sách sinh viên từ Backend
+  // Lấy danh sách sinh viên từ Backend trên Render
   const fetchStudents = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/students');
+      const response = await fetch('https://mern-backend-zxmv.onrender.com/api/students');
       const data = await response.json();
       setStudents(data);
     } catch (error) {
@@ -25,11 +25,10 @@ function App() {
   // Xử lý Form và Thêm sinh viên
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const newStudent = { studentId: mssv, name: name, email: email };
     
     try {
-      await fetch('http://localhost:5000/api/students', {
+      await fetch('https://mern-backend-zxmv.onrender.com/api/students', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newStudent)
@@ -38,7 +37,6 @@ function App() {
       setMssv(''); 
       setName(''); 
       setEmail('');
-      
       fetchStudents();
       alert("Đã thêm sinh viên thành công!");
     } catch (error) {
@@ -50,34 +48,42 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa sinh viên này?")) {
       try {
-        await fetch(`http://localhost:5000/api/students/${id}`, {
+        await fetch(`https://mern-backend-zxmv.onrender.com/api/students/${id}`, {
           method: 'DELETE',
         });
         alert("Xóa thành công!");
-        fetchStudents(); // Cập nhật lại danh sách mượt mà
+        fetchStudents(); 
       } catch (error) {
         console.error("Lỗi khi xóa:", error);
       }
     }
   };
 
-  // Hàm xử lý Sửa sinh viên (Cập nhật tên)
-  const handleEdit = async (id, currentName) => {
-    const newName = window.prompt("Nhập tên mới cho sinh viên:", currentName);
-    if (newName && newName.trim() !== "") {
+  // Hàm xử lý Sửa sinh viên (Cho phép sửa cả MSSV, Tên và Email)
+  const handleEdit = async (student) => {
+    const newStudentId = window.prompt("Nhập MSSV mới:", student.studentId);
+    if (newStudentId === null) return;
+
+    const newName = window.prompt("Nhập Họ tên mới:", student.name);
+    if (newName === null) return;
+
+    const newEmail = window.prompt("Nhập Email mới:", student.email);
+    if (newEmail === null) return;
+
+    if (newStudentId.trim() !== "" && newName.trim() !== "" && newEmail.trim() !== "") {
       try {
-        await fetch(`http://localhost:5000/api/students/${id}`, {
+        await fetch(`https://mern-backend-zxmv.onrender.com/api/students/${student._id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: newName }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentId: newStudentId, name: newName, email: newEmail }),
         });
         alert("Cập nhật thành công!");
-        fetchStudents(); // Cập nhật lại danh sách mượt mà
+        fetchStudents(); 
       } catch (error) {
         console.error("Lỗi khi sửa:", error);
       }
+    } else {
+      alert("Vui lòng nhập đầy đủ thông tin!");
     }
   };
 
@@ -109,7 +115,7 @@ function App() {
             <th>MSSV</th>
             <th>Họ Tên</th>
             <th>Email</th>
-            <th>THAO TÁC</th> {/* Thêm cột Thao tác */}
+            <th>THAO TÁC</th>
           </tr>
         </thead>
         <tbody>
@@ -119,9 +125,9 @@ function App() {
                 <td>{student.studentId}</td>
                 <td>{student.name}</td>
                 <td>{student.email}</td>
-                <td style={{ display: 'flex', gap: '5px' }}> {/* Cột chứa 2 nút */}
+                <td style={{ display: 'flex', gap: '5px' }}>
                   <button 
-                    onClick={() => handleEdit(student._id, student.name)}
+                    onClick={() => handleEdit(student)}
                     style={{ cursor: 'pointer', backgroundColor: '#2196F3', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px' }}
                   >
                     Sửa
